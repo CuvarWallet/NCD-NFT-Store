@@ -14,13 +14,8 @@ export function add(id: u32, nftId: u16, metadata: string): string {
   return NFT.addNFT(id, nftId, metadata, "");
 }
 
-export function addInBatch( nftDatas: Array<Batch> ): string {
-  let result: NFT[] = [];
-  assert(nftDatas.length > 0, "NFT data is empty");
-  nftDatas.forEach(nftData => {
-    result.push(new NFT(nftData.id as u32, nftData.nftId, nftData.metadata, context.sender, false, ""))
-  });
-  return NFT.addBatchNFT(result);
+export function addInBatch( nftDatas: Array<NFT> ): string {
+  return NFT.addBatchNFT(nftDatas);
 }
 
 export function getDetails(id: u32): CreateNFT {

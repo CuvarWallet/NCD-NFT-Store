@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME ||'ncd-nft-store'
+const CONTRACT_NAME = process.env.CONTRACT_NAME ||'ncd-nft-stores'
 
 function getConfig(env) {
   switch (env) {
