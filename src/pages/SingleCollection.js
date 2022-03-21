@@ -9,7 +9,7 @@ import getConfig from '../config';
 import { getNFTData } from '../utils';
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 
-function SingleNFT() {
+function SingleCollection() {
     const { collectionId } = useParams();
     const [collection, setCollection] = React.useState([]);
     const [nfts, setNfts] = React.useState([]);
@@ -136,4 +136,4 @@ function SingleNFT() {
     )
 }
 
-export default SingleNFT
+export default SingleCollection

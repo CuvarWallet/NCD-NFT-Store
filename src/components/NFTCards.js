@@ -4,44 +4,6 @@ import { Dialog, Disclosure, Tab, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, PlusSmIcon } from '@heroicons/react/solid'
 
-const filters = [
-    {
-        id: 'color',
-        name: 'Color',
-        options: [
-            { value: 'white', label: 'White' },
-            { value: 'beige', label: 'Beige' },
-            { value: 'blue', label: 'Blue' },
-            { value: 'brown', label: 'Brown' },
-            { value: 'green', label: 'Green' },
-            { value: 'purple', label: 'Purple' },
-        ],
-    },
-    {
-        id: 'category',
-        name: 'Category',
-        options: [
-            { value: 'new-arrivals', label: 'All New Arrivals' },
-            { value: 'tees', label: 'Tees' },
-            { value: 'crewnecks', label: 'Crewnecks' },
-            { value: 'sweatshirts', label: 'Sweatshirts' },
-            { value: 'pants-shorts', label: 'Pants & Shorts' },
-        ],
-    },
-    {
-        id: 'sizes',
-        name: 'Sizes',
-        options: [
-            { value: 'xs', label: 'XS' },
-            { value: 's', label: 'S' },
-            { value: 'm', label: 'M' },
-            { value: 'l', label: 'L' },
-            { value: 'xl', label: 'XL' },
-            { value: '2xl', label: '2XL' },
-        ],
-    },
-]
-
 function classNames(...classes)
 {
     return classes.filter(Boolean).join(' ')
@@ -49,8 +11,26 @@ function classNames(...classes)
 
 function NFTCards({ nfts }) {
 
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+    const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+    const filters = useState([]);
+
+    React.useEffect(() => {
+        nfts.attribute.map(attribute => {
+        //     {
+        //         id: 'attributes',
+        //         name: 'Attributes',
+        //         options: [
+        //             { value: 'xs', label: 'XS' },
+        //             { value: 's', label: 'S' },
+        //             { value: 'm', label: 'M' },
+        //             { value: 'l', label: 'L' },
+        //             { value: 'xl', label: 'XL' },
+        //             { value: '2xl', label: '2XL' },
+        //     ],
+        // }
+        });
+    },[]);
 
     return (
         <div>

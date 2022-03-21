@@ -101,7 +101,7 @@ function SingleNFT()
 
 
             {/* Product form */}
-            <div className="mt-10 lg:max-w-lg">
+            <div className="lg:max-w-lg">
 
                 <div className="my-4">
                     <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">{nfts.name}</h1>

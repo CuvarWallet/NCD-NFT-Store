@@ -1,6 +1,5 @@
 import React from 'react'
 import Header from '../components/Header';
-import MintSection from '../components/MintSection';
 import NFTCards from '../components/NFTCards';
 import { getNFTData } from '../utils';
 
