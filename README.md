@@ -32,6 +32,9 @@ Usage
 
 ![image](https://raw.githubusercontent.com/devpanther/NCD-NFT-Store/main/banner.png)
 
+<a href="https://www.loom.com/share/2043afecb82c48f1a621f512f32a06d8" target="_blank">Video demo UI walkthrough</a>
+
+
 Step 0: Install near-cli (optional)
 -------------------------------------
 
