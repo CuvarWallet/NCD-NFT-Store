@@ -1,13 +1,10 @@
 import React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Header from '../components/Header';
-import HeroSection from '../components/HeroSection';
 import MintSection from '../components/MintSection';
 import NFTCards from '../components/NFTCards';
 import Notification from '../components/Notification';
-import getConfig from '../config';
-import { getNFTData } from '../utils';
-const nearConfig = getConfig(process.env.NODE_ENV || 'development')
+import { checkTxFromURL, getNFTData } from '../utils';
 
 function SingleCollection() {
     const { collectionId } = useParams();
@@ -65,29 +62,17 @@ function SingleCollection() {
             });
 
             // check if its a redirect from previous tx
-            const search = window.location.search;
-            const params = new URLSearchParams(search);
-            const foo = params.get('transactionHashes');
-            if(foo){
-                fetch(nearConfig.nodeUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "jsonrpc": "2.0",
-                        "id": "dontcare",
-                        "method": "tx",
-                        "params": [foo, window.accountId]
-                    })
-                }).then(res => res.json()).then(data => {
-                    if (data['result']['status']['SuccessValue']){
-                        setShowNotify({ show: true, message: 'NFT purchased successfully!' });
-                    } else {
-                        setShowNotify({ show: true, message: 'NFT purchase failed!' });
-                    };
-                });
-            }
+            checkTxFromURL().then(tx =>
+            {
+                if (tx === 'success')
+                {
+                    setShowNotify({ show: true, message: 'NFT purchased successfully!' });
+                    return;
+                } else if (tx === 'failed')
+                {
+                    setShowNotify({ show: true, message: 'NFT purchase failed!' });
+                }
+            });
         }
     }, [])
 

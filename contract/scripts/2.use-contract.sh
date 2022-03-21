@@ -141,7 +141,7 @@ echo "Step 8: Check NFT Data and confirm owner again"
 echo ---------------------------------------------------------
 echo
 
-near view $CONTRACT getNFTData '{"id":2368191543 , "nftId": 1}' --account_id giftie.testnet
+near view $CONTRACT getNFTData '{"id":2368191543 , "nftId": 1}' --accountId $CONTRACT
 
 
 exit 0

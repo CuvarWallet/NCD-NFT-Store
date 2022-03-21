@@ -24,6 +24,11 @@ export function getDetails(id: u32): CreateNFT {
   return CreateNFT.get(id);
 }
 
+// get last added collection
+export function getLastAdded(accountId: string): u32 {
+  return CreateNFT.getLastAdded(accountId);
+}
+
 // get NFT data
 export function getNFTData(id: u32, nftId: u16): NFT {
   return NFT.get(id, nftId);

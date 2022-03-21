@@ -100,6 +100,13 @@ export class CreateNFT {
     return getNFT;
   }
 
+  // get last added collection
+  static getLastAdded(accountId: string): u32 {
+    const entries = nftOwner.get(accountId)!;
+    const lastAdded = entries[entries.length - 1];
+    return lastAdded;
+  }
+
   static getOwnerNFT(): u32[] {
     const getNFTOwner = nftOwner.get(context.sender)!;
     return getNFTOwner;

@@ -26,7 +26,7 @@ export async function initContract() {
   // Initializing our contract APIs by contract name and configuration
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['getDetails', 'getNFTData', 'entries', 'getMintedWithId', 'getMinted', 'getListings', 'getOwnerNFT', 'getSingleListing'],
+    viewMethods: ['getDetails', 'getNFTData', 'entries', 'getMintedWithId', 'getMinted', 'getListings', 'getOwnerNFT', 'getSingleListing', 'getLastAdded'],
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
   })
@@ -67,6 +67,40 @@ export function truncateString(str, num)
   {
     return str;
   }
+}
+
+export async function checkTxFromURL(){
+  // check if its a redirect from previous tx
+  const search = window.location.search;
+  const params = new URLSearchParams(search);
+  const foo = params.get('transactionHashes');
+  let result = '';
+
+  if (foo)
+  {
+    await fetch(nearConfig.nodeUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "jsonrpc": "2.0",
+        "id": "dontcare",
+        "method": "tx",
+        "params": [foo, window.accountId]
+      })
+    }).then(res => res.json()).then(data =>
+    {
+      if (data['result']['status']['SuccessValue'])
+      {
+        result = 'success';
+      } else
+      {
+        result = 'failed';
+      };
+    });
+  }
+  return result;
 }
 
 export async function getNFTData(collectionId, nftId) {
