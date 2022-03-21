@@ -1,18 +1,22 @@
 import { u128, VMContext, context } from "near-sdk-as";
-import { createsNFT, add, getNFTData, mintNFT, addInBatch } from "../index";
+import { createsNFT, add, getNFTData, mintNFT, addInBatch, listNFT, buyNFT } from "../index";
 import { createNFT, CreateNFT, NFT } from "../model";
-import { toYocto } from "../utils";
+import { toYocto } from "../../utils";
 
 let create: CreateNFT;
 let nftOne: string, nftTwo: string, nftThree: string, nftFourFive: string;
 
 beforeEach(() => {
   // creates an NFT collection
+
+  // pay for listing
   create = createsNFT(
       "Azuki", 
       "Azuki starts with a collection of 10,000 avatars that give you membership access to The Garden: a corner of the internet where artists, builders, and web3 enthusiasts meet to create a decentralized future.",
       5,
-      1
+      1,
+      "https://lh3.googleusercontent.com/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT=s130",
+      "https://lh3.googleusercontent.com/O0XkiR_Z2--OPa_RA6FhXrR16yBOgIJqSLdHTGA0-LAhyzjSYcb3WEPaCYZHeh19JIUEAUazofVKXcY2qOylWCdoeBN6IfGZLJ3I4A=h200"
   );
 
   // add NFT to the list
@@ -151,5 +155,18 @@ describe('Mint NFT', () => {
     // NFT Owned by minter
     const nft = getNFTData(create.id as u32, 1);
     expect(nft.owner).toStrictEqual(context.sender);
+
+    // list NFT
+    const list = listNFT(create.id as u32, 1, 1);
+    expect(list).toStrictEqual('✅ NFT 1 listed successfully');
+
+    // buy NFT as someone else
+    VMContext.setSigner_account_id("someoneElse");
+    VMContext.setAttached_deposit(toYocto(1));
+    const buy = buyNFT(
+        create.id as u32,
+        1,
+    );
+    expect(buy).toStrictEqual('✅ NFT 1 bought successfully');
   });
 })

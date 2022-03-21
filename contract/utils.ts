@@ -1,4 +1,4 @@
-import { u128, Context, ContractPromise } from "near-sdk-as";
+import { u128, Context, ContractPromise, math } from "near-sdk-as";
 
 /**
  * == TYPES ====================================================================
@@ -89,4 +89,8 @@ export function assert_single_promise_success(): void {
   const x = ContractPromise.getResults()
   assert(x.length == 1, "Expected exactly one promise result")
   assert(x[0].succeeded, "Expected PromiseStatus to be successful")
+}
+
+export function hash(value: string): u32 {
+  return math.hash32<string>(value);
 }

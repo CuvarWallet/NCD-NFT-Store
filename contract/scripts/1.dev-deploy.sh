@@ -21,7 +21,7 @@ echo ---------------------------------------------------------
 echo
 
 # comment out the line below to deploy the other example contract
-near dev-deploy ./build/release/src.wasm
+near dev-deploy ./build/release/ncd-nft-stores.wasm
 
 # uncomment the line below to deploy the other example contract
 # near dev-deploy ./build/release/singleton.wasm

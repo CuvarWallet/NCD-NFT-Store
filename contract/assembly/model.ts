@@ -1,6 +1,6 @@
-import { math, MapEntry, context, PersistentUnorderedMap, u128, PersistentVector } from "near-sdk-as";
-import { toYocto } from "../utils";
-import { hash } from "./utils";
+import { math, MapEntry, context, PersistentUnorderedMap, u128, PersistentVector, ContractPromiseBatch } from "near-sdk-as";
+import { asNEAR, toYocto } from "../utils";
+import { hash } from "../utils";
 
 type AccountId = string;
 
@@ -8,6 +8,7 @@ export const nftData = new PersistentUnorderedMap<string, NFT>("nftData");
 export const createNFT = new PersistentUnorderedMap<u32, CreateNFT>("createNFT");
 export const nftOwner = new PersistentUnorderedMap<AccountId, u32[]>("nftOwner");
 export const minted = new PersistentUnorderedMap<u32, u128>("minted");
+export const listings = new PersistentUnorderedMap<string, u128>("listings");
 
 @nearBindgen
 export class CreateNFT {
@@ -19,16 +20,22 @@ export class CreateNFT {
     public totalSupply: u16,
     public maker: string,
     public mintPrice: u16,
+    public profilePic: string,
+    public banner: string
   ) {
     this.id = hash(name);
     this.maker = maker;
     this.mintPrice = mintPrice;
+    this.profilePic = profilePic;
+    this.banner = banner;
   }
 
-  static setupNFT(name: string, description: string, totalSupply: u16, mintPrice: u16): CreateNFT {
+  static setupNFT(name: string, description: string, totalSupply: u16, mintPrice: u16, profilePic: string, banner: string): CreateNFT {
     assert(createNFT.get(hash(name)) == null, "NFT already exists");
 
-    const setupNFT = new CreateNFT(name, description, totalSupply, context.sender, mintPrice);
+    assert(totalSupply > 0, "Total supply must be greater than 0");
+
+    const setupNFT = new CreateNFT(name, description, totalSupply, context.sender, mintPrice, profilePic, banner);
     // creating a new NFT
     createNFT.set(setupNFT.id, setupNFT);
     // adding owner of the NFT
@@ -74,7 +81,7 @@ export class NFT {
     public metadata: string, 
     public maker: string,
     public minted: bool = false, 
-    public owner: string = ""
+    public owner: string = "",
   ) {
     this.id = id;
     this.nftId = nftId;
@@ -125,6 +132,16 @@ export class NFT {
     return getNFT;
   }
 
+  static getMinted(): MapEntry<u32, u128>[] {
+    const entries = minted.entries();
+    return entries;
+  }
+
+  static getSingleMinted(id: u32): u128 {
+    const mintedData = minted.get(id)!;
+    return mintedData;
+  }
+
   static mint(id: u32) : string {
     // attach deposit for mint
     const deposit = context.attachedDeposit;
@@ -152,8 +169,54 @@ export class NFT {
 
 @nearBindgen
 export class NFTSales {
-  buy(id: u32, nftId: u16): string {
-      //  ContractPromiseBatch.create(target_account_id).transfer(u128.sub(context.attachedDeposit, message_fee));
-      return "";
+  // list NFT for sale
+  static listNFT(id: u32, nftId: u16, price: u32): string {
+    // price must be greater than 0
+    assert(price > 0, "Price must be greater than 0");
+
+    assert(nftData.get(`${id}_${nftId}`) != null, "NFT does not exist");
+    // only owner can list NFT
+    assert(nftData.get(`${id}_${nftId}`)!.owner == context.sender, "Only the owner can list NFT"); 
+    assert(nftData.get(`${id}_${nftId}`)!.minted == true, "NFT is not minted");
+
+    // list NFT
+    listings.set(`${id}_${nftId}`, toYocto(price));
+
+    return `✅ NFT ${nftId} listed successfully`;
+  }
+
+  static getListings(): MapEntry<string, u128>[] {
+    const entries = listings.entries();
+    return entries;
+  }
+
+  // fucntion to buy NFT
+  static buyNFT(id: u32, nftId: u16): string {
+    // check if listed
+    assert(listings.get(`${id}_${nftId}`) !== null, "NFT does not exist");
+    let listingPrice = listings.get(`${id}_${nftId}`)!;
+
+    // check if NFT exists
+    assert(nftData.get(`${id}_${nftId}`)!.owner != context.sender, "You are the owner of this NFT");
+    assert(nftData.get(`${id}_${nftId}`)!.minted == true, "NFT is not minted");
+    assert(nftData.get(`${id}_${nftId}`)!.owner != "", "this NFT is not owned");
+    assert(nftData.get(`${id}_${nftId}`) != null, "NFT does not exist");
+    
+    // attach deposit for mint
+    const deposit = context.attachedDeposit;
+    assert(deposit > u128.Zero, "Deposit must be greater than 0");
+    assert(deposit == listingPrice, `NFT is listed for ${asNEAR(listingPrice)} NEAR`);
+
+    ContractPromiseBatch.create(nftData.get(`${id}_${nftId}`)!.owner).transfer(deposit);
+
+    // update owner
+    const nft = nftData.get(`${id}_${nftId}`)!;
+    nft.owner = context.sender;
+    nftData.set(`${id}_${nftId}`, nft);
+
+    // update listings
+    listings.delete(`${id}_${nftId}`);
+
+    return `✅ NFT ${nftId} bought successfully`;
   }
 }
