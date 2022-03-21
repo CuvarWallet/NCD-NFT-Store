@@ -54,6 +54,11 @@ export function getListings(): MapEntry<string, u128>[] {
   return NFTSales.getListings();
 }
 
+// check single listings
+export function getSingleListing(id: u32, nftId: u16): u128 {
+  return NFTSales.getSingleListing(id, nftId);
+}
+
 // check minted
 export function getMinted(): MapEntry<u32, u128>[] {
   return NFT.getMinted();
@@ -62,4 +67,9 @@ export function getMinted(): MapEntry<u32, u128>[] {
 // check minted with id
 export function getMintedWithId(id: u32): u128 {
   return NFT.getSingleMinted(id);
+}
+
+// get nft my owner id
+export function getOwnerNFT(accountId: string): string[] {
+  return NFT.getOwnerNFT(accountId);
 }

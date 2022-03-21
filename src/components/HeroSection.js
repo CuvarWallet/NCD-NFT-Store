@@ -82,17 +82,32 @@ const HeroSection = ({
                                 </div>
                             </div>
                             <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+                                { accountId !== '' && (
+                                    <>
+                                    <p className='px-8 font-medium'>Hello, {accountId}</p>
+                                    <span className="inline-flex rounded-md shadow mx-4">
+                                    <Link to="/my-nft">
+                                        <a
+                                            href="javascript:void(0)"
+                                            className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
+                                        >
+                                            My NFTs
+                                        </a>
+                                    </Link>
+                                    </span>
+                                    </>
+                                ) }
                                 <span className="inline-flex rounded-md shadow">
                                     {
                                         login === '' ? <a
-                                            href="#"
+                                            href="javascript:void(0)"
                                             onClick={(e) => logout()}
                                             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
                                         >
                                             Log Out
                                         </a> : 
                                             <a
-                                                href="#"
+                                                href="javascript:void(0)"
                                                 onClick={(e) => login()}
                                                 className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
                                             >
@@ -137,13 +152,13 @@ const HeroSection = ({
                                 {
                                     login === '' ?
                                         <a
-                                            href="#"
+                                            href="javascript:void(0)"
                                             onClick={(e) => logout()}
                                             className="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
                                         >
                                             Log Out
                                         </a> : <a
-                                            href="#"
+                                            href="javascript:void(0)"
                                             onClick={(e) => login()}
                                             className="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
                                         >
@@ -174,12 +189,23 @@ const HeroSection = ({
                                 </a>
                             </div>
                             <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-                                <a
-                                    href="#"
-                                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
-                                >
-                                    Create
-                                </a>
+                                {
+                                    login === '' ? <Link to='/create'>
+                                        <a
+                                            href="javascript:void(0)"
+                                            className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
+                                        >
+                                            Create
+                                        </a>
+                                    </Link> :
+                                    <a
+                                        onClick={(e) => login()}
+                                        href="javascript:void(0)"
+                                        className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
+                                    >
+                                        Login
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>

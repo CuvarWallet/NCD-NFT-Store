@@ -9,7 +9,41 @@ export const createNFT = new PersistentUnorderedMap<u32, CreateNFT>("createNFT")
 export const nftOwner = new PersistentUnorderedMap<AccountId, u32[]>("nftOwner");
 export const minted = new PersistentUnorderedMap<u32, u128>("minted");
 export const listings = new PersistentUnorderedMap<string, u128>("listings");
+export const nftBuyers = new PersistentUnorderedMap<AccountId, string[]>("nftBuyers");
 
+function addBuyer(id: u32, nftId: string): void {
+  // add to owner list
+    // adding owner of the NFT
+    let ownerNFT = nftBuyers.get(context.sender);
+
+    // check if owner already has NFT
+    if (ownerNFT == null) {
+      ownerNFT = [];
+    }
+
+    // add NFT to the list
+    ownerNFT.push(`${id}_${nftId}`);
+    nftBuyers.set(context.sender, ownerNFT);
+} 
+
+function removeBuyer(accountId: string, id: u32, nftId: u16): void {
+  // add to owner list
+    // adding owner of the NFT
+    let ownerNFT = nftBuyers.get(accountId);
+
+    // check if owner already has NFT
+    if (ownerNFT == null) {
+      ownerNFT = [];
+    }
+
+    // remove NFT from the list
+    var index = ownerNFT.indexOf(`${id}_${nftId}`);
+    if (index !== -1) {
+      ownerNFT.splice(index, 1);
+    }
+
+    nftBuyers.set(accountId, ownerNFT);
+} 
 @nearBindgen
 export class CreateNFT {
   id: u32;
@@ -71,7 +105,6 @@ export class CreateNFT {
     return getNFTOwner;
   }
 }
-
 
 @nearBindgen
 export class NFT {
@@ -142,6 +175,12 @@ export class NFT {
     return mintedData;
   }
 
+  static getOwnerNFT(accountId: string): string[] {
+    let myNFTs = nftBuyers.get(accountId)!
+    
+    return myNFTs;
+  }
+
   static mint(id: u32) : string {
     // attach deposit for mint
     const deposit = context.attachedDeposit;
@@ -161,6 +200,8 @@ export class NFT {
     nft.minted = true;
     nft.owner = context.sender;
     nftData.set(`${id}_${currentId}`, nft);
+
+    addBuyer(id, currentId.toString());
     
     minted.set(id, currentId);
     return `✅ Minted No:${currentId} successfully with ${getNFTData.mintPrice} NEAR`;
@@ -185,9 +226,16 @@ export class NFTSales {
     return `✅ NFT ${nftId} listed successfully`;
   }
 
+  // get all listings
   static getListings(): MapEntry<string, u128>[] {
     const entries = listings.entries();
     return entries;
+  }
+
+  // get a single listing
+  static getSingleListing(id: u32, nftId: u16): u128 {
+    const listing = listings.get(`${id}_${nftId}`)!;
+    return listing;
   }
 
   // fucntion to buy NFT
@@ -209,8 +257,13 @@ export class NFTSales {
 
     ContractPromiseBatch.create(nftData.get(`${id}_${nftId}`)!.owner).transfer(deposit);
 
-    // update owner
     const nft = nftData.get(`${id}_${nftId}`)!;
+
+    // update buyer
+    addBuyer(id, nftId.toString());
+    removeBuyer(nft.owner, id, nftId);
+
+    // update owner
     nft.owner = context.sender;
     nftData.set(`${id}_${nftId}`, nft);
 

@@ -34,6 +34,17 @@ const Header = () =>
                                 </div>
                             </div>
                             <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
+                                {window.accountId !== '' && <p className='px-8 font-medium'>Hello, {window.accountId}</p>}
+                                <span className="inline-flex rounded-md shadow mx-4">
+                                    <Link to='/my-nft'>
+                                        <a
+                                            href="javascript:void(0)"
+                                            className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
+                                        >
+                                            My NFTs
+                                        </a>
+                                    </Link>
+                                </span>
                                 <span className="inline-flex rounded-md shadow">
                                     <a
                                         href="#"

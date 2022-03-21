@@ -1,76 +1,165 @@
-import React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import Header from '../components/Header';
-import HeroSection from '../components/HeroSection';
-import NFTCards from '../components/NFTCards';
-import { logout } from '../utils';
+import React, { useState } from 'react'
+import { CheckIcon, QuestionMarkCircleIcon, StarIcon } from '@heroicons/react/solid'
+import { RadioGroup } from '@headlessui/react'
+import { ShieldCheckIcon } from '@heroicons/react/outline'
+import Header from '../components/Header'
+import { useParams } from 'react-router-dom'
+import { callWithAmount, getNFTData } from '../utils'
+import Notification from '../components/Notification'
 
-function SingleNFT() {
-    const { collectionId } = useParams();
-    const [collection, setCollection] = React.useState([]);
-    const [nfts, setNfts] = React.useState([]);
-    const [allMinted, setAllMinted] = React.useState(false);
+import getConfig from '../config'
+const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 
-    const fillNFTToState = async (entries) => {
-        let tmp = []
-        for(let i = 1; i <= entries.totalSupply; i++) {
-            await window.contract.getNFTData({
+function SingleNFT()
+{
+    const { collectionId, nftId } = useParams();
+    const [nfts, setNfts] = useState({});
+    const [sellPrice, setPrice] = useState(0);
+    const [showNotify, setShowNotify] = React.useState({ show: false, message: '' });
+
+    const triggerSales = async (nfts) => {
+        if (nfts.owner === window.accountId)
+        {
+            callWithAmount('listNFT', {
                 id: +collectionId,
-                nftId: i
-            }).then(async nftData =>
+                nftId: +nftId,
+                price: +sellPrice
+            }, 0).then(() => {
+                setShowNotify({ show: true, message: 'NFT listed successfully' });
+                setPrice(0);
+            }).catch(err => {
+                setShowNotify({ show: true, message: 'NFT listing failed' });
+                setPrice(0);
+            });
+        } else if(nfts.owner !== window.accountId) {
+            callWithAmount('buyNFT', {
+                id: +collectionId,
+                nftId: +nftId,
+            }, nfts.price).then(() =>
             {
-                let res = await fetch(nftData.metadata).then(res => res.json()).then(data => {
-                    return data;
-                })
-                // adding data from ipfs
-                nftData.name = res.name;
-                nftData.attributes = res.attributes;
-                nftData.image = res.image;
-
-                tmp.push(nftData);
-            })
+                setPrice(0);
+            }).catch(err =>
+            {
+                setShowNotify({ show: true, message: 'NFT purchase failed!' });
+                setPrice(0);
+            });
+        } else {
+            return;
         }
-        setNfts([...tmp]);
     }
+
 
     React.useEffect(() => {
         if (window.walletConnection.isSignedIn())
         {
-            // window.contract is set by initContract in index.js
-            window.contract.getDetails({
-                id: +collectionId
-            }).then(entries => {
-                setCollection(entries);
-                // check if minting is finished
-                window.contract.getMintedWithId({
-                    id: +collectionId
-                }).then(mint =>
+            getNFTData(collectionId, nftId).then(nftData => {
+                setNfts(nftData);
+            })
+
+            // check if its a redirect from previous tx
+            const search = window.location.search;
+            const params = new URLSearchParams(search);
+            const foo = params.get('transactionHashes');
+
+            if (foo)
+            {
+                fetch(nearConfig.nodeUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "jsonrpc": "2.0",
+                        "id": "dontcare",
+                        "method": "tx",
+                        "params": [foo, window.accountId]
+                    })
+                }).then(res => res.json()).then(data =>
                 {
-                    setAllMinted(+collection.totalSupply === +mint);
+                    if (data['result']['status']['SuccessValue'])
+                    {
+                        setShowNotify({ show: true, message: 'NFT purchased successfully!' });
+                    } else
+                    {
+                        setShowNotify({ show: true, message: 'NFT purchase failed!' });
+                    };
                 });
-                fillNFTToState(entries)
-            });
+            }
         }
     }, [])
 
     return (
-        <div>
-            <Header />
-            <div className="w-full rounded-lg text-center align-center">
-                <div style={{
-                    backgroundImage: `url(${collection.banner + '=h600'})` }} className='h-80 card-background'></div>
-                <div className="flex justify-center">
-                    <img src={collection.profilePic} className="rounded-full object-center border-4 border-white -mt-10 shadow-lg align-center" />
+        <>
+        <Header />
+        <div className="max-w-2xl mx-auto py-8 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:gap-x-8">
+            {/* Product image */}
+            <div className="mt-10 lg:mt-0 lg:self-center">
+                <div className="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
+                    <img src={nfts.image} alt={nfts.name} className="w-10/12 h-10/12 object-center object-cover" />
                 </div>
-                <h2 className="font-bold text-4xl pt-3 pb-2">{collection.name}</h2>
-                <p className="font-semibold p-2 text-sm text-gray-500">Created by <span href="#" className="text-blue-500 hover:text-blue-700"> {collection.maker} </span> </p>
-                <p className="mx-auto lg:px-10 md:px-6 sm:px-2 py-2 mb-5 text-gray-500 lg:w-6/12 md:w-6/12 w-10/12">
-                    {collection.description}
-                </p>
             </div>
-            {/* NFT Listing */}
-            <NFTCards nfts={nfts} />
+
+
+            {/* Product form */}
+            <div className="mt-10 lg:max-w-lg">
+
+                <div className="my-4">
+                    <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">{nfts.name}</h1>
+                </div>
+                <span className="text-gray-500 hover:text-gray-700">Owner: {nfts.owner}</span>
+
+                <section aria-labelledby="information-heading" className="mt-4">
+                    <h2 id="information-heading" className="sr-only">
+                        Product information
+                    </h2>
+
+                    <div className="flex items-center">
+                        <p className="text-lg text-gray-900 sm:text-xl">{nfts.listed}</p>
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-3 gap-4 items-center">
+                        {
+                            nfts?.attributes?.map(attribute => (
+                                <div className="m-2" key={attribute.value}>
+                                    <p className="text-sm leading-5 font-medium text-gray-900">{attribute.trait_type}</p>
+                                    <p className="text-sm leading-5 text-gray-500">{attribute.value}</p>
+                                </div>
+                            ))
+                        }
+                        <p className="text-base text-gray-500">{nfts.description}</p>
+                    </div>
+                </section>
+
+                <section aria-labelledby="options-heading">
+                        <div className='mt-6'>
+                            <div className="mt-1">
+                                <input
+                                    disabled={nfts.owner !== window.accountId}
+                                    type="email"
+                                    name="email"
+                                    id="email"
+                                    value={nfts.owner !== window.accountId ? nfts.price + ' NEAR' : sellPrice}
+                                    onChange={(e) => setPrice(e.target.value)}
+                                    className="p-4 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                    placeholder={nfts.owner !== window.accountId ? nfts.price : "Input your price here"}
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-4">
+                            <button
+                                disabled={nfts.price == 0 && nfts.owner !== window.accountId}
+                                onClick={() => triggerSales(nfts)}
+                                className="w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+                            >
+                                    {nfts.price === 0 && nfts.owner !== window.accountId ? 'Not Listed' : nfts.owner !== window.accountId ? `Buy ${nfts.name}` : nfts.price !== 0 ? 'Change Price' : `Sell ${nfts.name}`}
+                            </button>
+                        </div>
+                </section>
+            </div>
+            <Notification show={showNotify.show} hide={() => setShowNotify({ show: false, message: '' })} message={showNotify.message} />
+
         </div>
+        </>
     )
 }
 

@@ -140,7 +140,7 @@ function NFTCards({ nfts }) {
             </Transition.Root>
 
             <main className="max-w-2xl mx-auto px-4 lg:max-w-7xl lg:px-8">
-                <div className="border-b border-gray-200 pt-12 pb-10">
+                <div className="border-b border-gray-200 py-10">
                 </div>
 
                 <div className="pt-12 pb-24 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
@@ -193,7 +193,7 @@ function NFTCards({ nfts }) {
                     <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-3">
                         {
                             nfts.map((nft, key) => (
-                                <Link key={key} to={`/`}>
+                                <Link key={key} to={`/${nft.id}/${nft.nftId}`}>
                                     <div
                                         className="group relative bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden"
                                     >
@@ -211,7 +211,7 @@ function NFTCards({ nfts }) {
                                             </h3>
                                             <p className="text-sm text-gray-500">Owner: {nft.owner}</p>
                                             <div className="flex-1 flex flex-col justify-end">
-                                                <p className="text-base font-medium text-gray-900">$20</p>
+                                                <p className="text-base font-medium text-gray-900">{nft.price === 0 ? 'Not Listed' : nft.price + ' NEAR'}</p>
                                             </div>
                                         </div>
                                     </div>
