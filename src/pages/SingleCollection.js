@@ -95,7 +95,7 @@ function SingleCollection() {
             {
                 minted 
                     ? 
-                    +collection.totalSupply === +minted ? <NFTCards nfts={nfts} /> : <MintSection name={collection.name} totalSupply={collection.totalSupply} minted={minted} id={collection.id} mintedReady={mintedReady}/>
+                    +collection.totalSupply === +minted ? <NFTCards nfts={nfts} /> : <MintSection name={collection.name} totalSupply={collection.totalSupply} minted={minted} id={collection.id} mintedReady={mintedReady} price={collection.mintPrice}/>
                     :
                 <div className="h-3/6 flex justify-center items-center m-20">
                     {/* loading icon */}

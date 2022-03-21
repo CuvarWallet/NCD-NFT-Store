@@ -7,11 +7,12 @@ const MintSection = ({
     totalSupply,
     minted,
     id,
-    mintedReady
+    mintedReady,
+    price
 }) => {
 
     const mintAnNFT = async () => {
-        const res  = await callWithAmount('mintNFT', { id } , 1);
+        const res = await callWithAmount('mintNFT', { id }, price);
         console.log(res);
     }
 
