@@ -13,24 +13,47 @@ function NFTCards({ nfts }) {
 
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-    const filters = useState([]);
+    const [filters, setFilters] = useState([]);
+
+    const getFilters = async () => {
+        // it is a mess, i know 😂 but i just had to make that work
+        let tmp = [], tmp2 = [];
+        await nfts?.map(async nft =>
+        {
+            // group by attribute name
+            await nft.attributes.map(attribute =>
+            {
+                tmp.push(attribute)
+            });
+            let result = tmp.reduce(function (r, a)
+            {
+                r[a.trait_type] = r[a.trait_type] || [];
+                r[a.trait_type].push(a);
+                return r;
+            }, Object.create(null));
+
+            await tmp2.push(result);
+        });
+        let ttt = await tmp2.reduce(async function (r, a, i)
+        {
+            for(let i = 0; i < Object.keys(a).length; i++){
+                r[Object.keys(a)[i]] = [];
+                let ress = Object.values(a)[i].filter((value, index, self) =>
+                    index === self.findIndex((t) => (
+                        t.value === value.value
+                    ))
+                ) 
+                r[Object.keys(a)[i]].push(...ress);
+            };
+            return r;
+        }, Object.create(null));
+        console.log(ttt);  
+        setFilters(ttt);
+    }
 
     React.useEffect(() => {
-        nfts.attribute.map(attribute => {
-        //     {
-        //         id: 'attributes',
-        //         name: 'Attributes',
-        //         options: [
-        //             { value: 'xs', label: 'XS' },
-        //             { value: 's', label: 'S' },
-        //             { value: 'm', label: 'M' },
-        //             { value: 'l', label: 'L' },
-        //             { value: 'xl', label: 'XL' },
-        //             { value: '2xl', label: '2XL' },
-        //     ],
-        // }
-        });
-    },[]);
+        getFilters()
+    }, [nfts]);
 
     return (
         <div>
@@ -73,7 +96,7 @@ function NFTCards({ nfts }) {
 
                             {/* Filters */}
                             <form className="mt-4">
-                                {filters.map((section) => (
+                                {/* {filters.map((section) => (
                                     <Disclosure as="div" key={section.name} className="border-t border-gray-200 pt-4 pb-4">
                                         {({ open }) => (
                                             <fieldset>
@@ -112,7 +135,7 @@ function NFTCards({ nfts }) {
                                             </fieldset>
                                         )}
                                     </Disclosure>
-                                ))}
+                                ))} */}
                             </form>
                         </div>
                     </Transition.Child>
@@ -138,22 +161,22 @@ function NFTCards({ nfts }) {
 
                         <div className="hidden lg:block">
                             <form className="divide-y divide-gray-200 space-y-10">
-                                {filters.map((section, sectionIdx) => (
-                                    <div key={section.name} className={sectionIdx === 0 ? null : 'pt-10'}>
+                                {Object.keys(filters).map((section, key) => (
+                                    <div key={key} className={key === 0 ? null : 'pt-10'}>
                                         <fieldset>
-                                            <legend className="block text-sm font-medium text-gray-900">{section.name}</legend>
+                                            <legend className="block text-sm font-medium text-gray-900">{section}</legend>
                                             <div className="pt-6 space-y-3">
-                                                {section.options.map((option, optionIdx) => (
-                                                    <div key={option.value} className="flex items-center">
+                                                {filters[section].map((option, optionIdx) => (
+                                                    <div key={optionIdx} className="flex items-center">
                                                         <input
-                                                            id={`${section.id}-${optionIdx}`}
-                                                            name={`${section.id}[]`}
-                                                            defaultValue={option.value}
+                                                            id={`${section.value}-${optionIdx}`}
+                                                            name={`${section.value}[]`}
+                                                            defaultValue={section.value}
                                                             type="checkbox"
                                                             className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                                         />
-                                                        <label htmlFor={`${section.id}-${optionIdx}`} className="ml-3 text-sm text-gray-600">
-                                                            {option.label}
+                                                        <label htmlFor={`${section.value}-${optionIdx}`} className="ml-3 text-sm text-gray-600">
+                                                            {option.value}
                                                         </label>
                                                     </div>
                                                 ))}
