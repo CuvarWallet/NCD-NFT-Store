@@ -30,7 +30,22 @@ Exploring The Code
 Usage
 ======
 
-![image](https://raw.githubusercontent.com/devpanther/NCD-NFT-Store/main/banner.png)
+![banner](https://raw.githubusercontent.com/devpanther/NCD-NFT-Store/main/readme-image/banner.png)
+
+#### Mobile Screenshots
+
+<table>
+  <tr>
+    <td>Create NFT Page</td>
+     <td>Collection View</td>
+     <td>Single NFT View</td>
+  </tr>
+  <tr>
+    <td><img src="https://raw.githubusercontent.com/devpanther/NCD-NFT-Store/main/readme-image/phone1.png" width=270 height=480></td>
+    <td><img src="https://raw.githubusercontent.com/devpanther/NCD-NFT-Store/main/readme-image/phone2.png" width=270 height=480></td>
+    <td><img src="https://raw.githubusercontent.com/devpanther/NCD-NFT-Store/main/readme-image/phone3.png" width=270 height=480></td>
+  </tr>
+</table>
 
 <a href="https://www.loom.com/share/2043afecb82c48f1a621f512f32a06d8" target="_blank">Video demo UI walkthrough</a>
 
