@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Header from '../components/Header'
 import { useParams } from 'react-router-dom'
-import { callWithAmount, checkTxFromURL, getNFTData } from '../utils'
+import { callWithAmount, checkTxFromURL, getNFTData, ipfsImageSupport } from '../utils'
 import Notification from '../components/Notification'
 
 function SingleNFT()
@@ -69,7 +69,7 @@ function SingleNFT()
             {/* Product image */}
             <div className="mt-10 lg:mt-0 lg:self-center">
                 <div className="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
-                    <img src={nfts.image} alt={nfts.name} className="w-10/12 h-10/12 object-center object-cover" />
+                        <img src={ipfsImageSupport(nfts.image)} alt={nfts.name} className="w-10/12 h-10/12 object-center object-cover" />
                 </div>
             </div>
 

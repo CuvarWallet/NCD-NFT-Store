@@ -3,6 +3,7 @@ import React, { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Tab, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, PlusSmIcon } from '@heroicons/react/solid'
+import { ipfsImageSupport } from '../utils'
 
 function classNames(...classes)
 {
@@ -198,7 +199,7 @@ function NFTCards({ nfts }) {
                                     >
                                         <div className="aspect-w-3 aspect-h-4 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96">
                                             <img
-                                                src={nft.image}
+                                                src={ipfsImageSupport(nft.image)}
                                                 alt={nft.name}
                                                 className="w-full h-full object-center object-cover sm:w-full sm:h-full"
                                             />

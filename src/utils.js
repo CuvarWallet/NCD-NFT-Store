@@ -148,3 +148,10 @@ export async function getNFTData(collectionId, nftId) {
   })
   return result;
 }
+
+export function ipfsImageSupport(url){
+  if(url.includes('ipfs://')){
+    return 'https://gateway.ipfs.io/ipfs/' + url.split('ipfs://')[1]
+  }
+  return url;
+}
