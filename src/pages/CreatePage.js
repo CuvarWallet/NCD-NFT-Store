@@ -52,7 +52,7 @@ function CreatePage()
       await window.contract.add({
         "id": collectionId, 
         "nftId": i, 
-        "metadata": metadataLink.includes('https://') ? metadataLink : pushJson === 'no-json' ? `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}` : `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}.json`
+        "metadata": metadataLink.includes('https://') ? `${metadataLink}/${i}` : pushJson === 'no-json' ? `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}` : `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}.json`
       }).then(async res => {
         await setUploadProgress(i / totalSupply * 100);
         if(i === totalSupply) {
