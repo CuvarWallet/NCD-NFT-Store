@@ -192,6 +192,7 @@ function NFTCards({ nfts }) {
 
                     <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:gap-x-8 xl:grid-cols-3">
                         {
+                            nfts.length > 0 ?
                             nfts.map((nft, key) => (
                                 <Link key={key} to={`/${nft.id}/${nft.nftId}`}>
                                     <div
@@ -216,6 +217,32 @@ function NFTCards({ nfts }) {
                                         </div>
                                     </div>
                                 </Link>
+                            )) 
+                            : 
+                            Array.from(Array(10).keys()).map((nft, key) => (
+                            <Link key={key} to={`/${nft.id}/${nft.nftId}`}>
+                                <div
+                                    className="group relative bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden"
+                                >
+                                    <div className="aspect-w-3 aspect-h-4 bg-gray-200 group-hover:opacity-75 sm:aspect-none sm:h-96">
+                                        <img
+                                            src={'https://cdn.dribbble.com/users/479985/screenshots/1719391/loader_seq.gif'}
+                                            alt={'loading'}
+                                            className="w-full h-full object-center object-cover sm:w-full sm:h-full"
+                                        />
+                                    </div>
+                                    <div className="flex-1 p-4 space-y-2 flex flex-col">
+                                        <h3 className="text-sm font-medium text-gray-900">
+                                            <span aria-hidden="true" className="absolute inset-0" />
+                                            Loading
+                                        </h3>
+                                        <p className="text-sm text-gray-500">Owner: loading...</p>
+                                        <div className="flex-1 flex flex-col justify-end">
+                                            <p className="text-base font-medium text-gray-900">0 NEAR</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
                             ))
                         }
                     </div>
