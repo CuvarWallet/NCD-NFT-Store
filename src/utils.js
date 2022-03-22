@@ -110,9 +110,23 @@ export async function getNFTData(collectionId, nftId) {
     nftId: +nftId
   }).then(async nftData =>
   {
-    let res = await fetch(nftData.metadata).then(res => res.json()).then(data =>
-    {
-      return data;
+    let res = await fetch(nftData.metadata)      
+    .then(response =>
+      {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1)
+        {
+          return response.json().then(data =>
+          {
+            return data;
+          });
+        } else
+        {
+          return response.text().then(text =>
+          {
+            return JSON.parse(JSON.stringify(text));
+          });
+        }
     })
     // adding data from ipfs
     nftData.name = res.name;
