@@ -63,7 +63,7 @@ function SingleNFT()
     }, [])
 
     return (
-        <>
+        <div>
         <Header />
         <div className="max-w-2xl mx-auto py-8 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:gap-x-8">
             {/* Product image */}
@@ -133,7 +133,7 @@ function SingleNFT()
             <Notification show={showNotify.show} hide={() => setShowNotify({ show: false, message: '' })} message={showNotify.message} />
 
         </div>
-        </>
+        </div>
     )
 }
 

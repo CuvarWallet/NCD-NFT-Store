@@ -202,6 +202,9 @@ export class NFT {
     assert(minted.get(id)! <= u128.from(getNFTData.totalSupply), "Mint has ended");
     assert(nftData.get(`${id}_${currentId}`) !== null, "NFT does not exists");
 
+    // send deposit to the owner
+    ContractPromiseBatch.create(nftData.get(`${id}_${currentId}`)!.owner).transfer(deposit);
+
     // update minted to true
     const nft = nftData.get(`${id}_${currentId}`)!;
     nft.minted = true;
