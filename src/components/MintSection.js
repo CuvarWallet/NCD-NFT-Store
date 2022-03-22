@@ -13,7 +13,6 @@ const MintSection = ({
 
     const mintAnNFT = async () => {
         const res = await callWithAmount('mintNFT', { id }, price);
-        console.log(res);
     }
 
     return (
