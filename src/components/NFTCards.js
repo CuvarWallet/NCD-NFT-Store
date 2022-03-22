@@ -47,7 +47,6 @@ function NFTCards({ nfts }) {
             };
             return r;
         }, Object.create(null));
-        console.log(ttt);  
         setFilters(ttt);
     }
 
