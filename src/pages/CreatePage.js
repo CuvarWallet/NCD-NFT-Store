@@ -52,7 +52,7 @@ function CreatePage()
       await window.contract.add({
         "id": collectionId, 
         "nftId": i, 
-        "metadata": pushJson === 'no-json' ? `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}` : `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}.json`
+        "metadata": metadataLink.includes('https://') ? metadataLink : pushJson === 'no-json' ? `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}` : `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}.json`
       }).then(async res => {
         // if (data['result']['status']['SuccessValue']){
         // }
