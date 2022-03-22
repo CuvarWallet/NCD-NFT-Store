@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '../components/Header'
 import HeroSection from '../components/HeroSection'
-import { Notification } from '../components/Notification'
+import Notification from '../components/Notification'
 import TrendingCard from '../components/TrendingCard'
 
 import { login, logout } from '../utils'
