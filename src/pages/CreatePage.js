@@ -54,8 +54,6 @@ function CreatePage()
         "nftId": i, 
         "metadata": metadataLink.includes('https://') ? metadataLink : pushJson === 'no-json' ? `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}` : `https://gateway.ipfs.io/ipfs/${metadataLink}/${i}.json`
       }).then(async res => {
-        // if (data['result']['status']['SuccessValue']){
-        // }
         await setUploadProgress(i / totalSupply * 100);
         if(i === totalSupply) {
           setShowNotify({ show: true, message: 'Collection created successfully' });
