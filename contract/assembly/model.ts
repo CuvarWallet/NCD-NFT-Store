@@ -44,6 +44,23 @@ function removeBuyer(accountId: string, id: u32, nftId: u16): void {
 
     nftBuyers.set(accountId, ownerNFT);
 } 
+
+@nearBindgen
+export class AdminPriviledge {
+    static editAnNFT(id: u32, nftId: u16, metadata: string): boolean {
+      assert(context.sender == 'nearsea-store.testnet', "Only admin can edit an NFT");
+      let nft = nftData.get(`${id}_${nftId}`)!;
+      nft.metadata = metadata;
+      nftData.set(`${id}_${nftId}`, nft);
+      return true;
+    }
+
+    static deleteACollection(id: u32): boolean {
+      assert(context.sender == 'nearsea-store.testnet', "Only admin can delete a collection");
+      createNFT.delete(id);
+      return true;
+    }
+}
 @nearBindgen
 export class CreateNFT {
   id: u32;
@@ -203,7 +220,7 @@ export class NFT {
     assert(nftData.get(`${id}_${currentId}`) !== null, "NFT does not exists");
 
     // send deposit to the owner
-    ContractPromiseBatch.create(nftData.get(`${id}_${currentId}`)!.owner).transfer(deposit);
+    ContractPromiseBatch.create(getNFTData.maker).transfer(deposit);
 
     // update minted to true
     const nft = nftData.get(`${id}_${currentId}`)!;

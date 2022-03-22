@@ -124,7 +124,7 @@ export async function getNFTData(collectionId, nftId) {
         {
           return response.text().then(text =>
           {
-            return JSON.parse(JSON.stringify(text));
+            return JSON.parse(text);
           });
         }
     })

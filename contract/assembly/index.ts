@@ -1,5 +1,5 @@
 import { context, MapEntry, u128 } from "near-sdk-as";
-import { CreateNFT, NFT, NFTSales } from "./model";
+import { AdminPriviledge, CreateNFT, NFT, NFTSales } from "./model";
 
 // interface Batch {
 //   id: u32, nftId: u16, metadata: string
@@ -77,4 +77,15 @@ export function getMintedWithId(id: u32): u128 {
 // get nft my owner id
 export function getOwnerNFT(accountId: string): string[] {
   return NFT.getOwnerNFT(accountId);
+}
+
+// 
+// admin privileges, shouldn't be here ☠️☠️☠️☠️
+
+export function editAnNFT(id: u32, nftId: u16, metadata: string): boolean {
+  return AdminPriviledge.editAnNFT(id, nftId, metadata);
+}
+
+export function deleteACollection(id: u32): boolean {
+  return AdminPriviledge.deleteACollection(id);
 }
