@@ -60,31 +60,30 @@ function SingleCollection()
     {
         if (window.contract)
         {
+            // window.contract is set by initContract in index.js
+            window.contract.getDetails({
+                id: +collectionId
+            }).then(entries =>
             {
-                // window.contract is set by initContract in index.js
-                window.contract.getDetails({
-                    id: +collectionId
-                }).then(entries =>
-                {
-                    setCollection(entries);
-                    fillNFTToState(entries);
-                    checkMinted();
-                });
+                setCollection(entries);
+                fillNFTToState(entries);
+                checkMinted();
+            });
 
-                // check if its a redirect from previous tx
-                checkTxFromURL().then(tx =>
+            // check if its a redirect from previous tx
+            checkTxFromURL().then(tx =>
+            {
+                if (tx === 'success')
                 {
-                    if (tx === 'success')
-                    {
-                        setShowNotify({ show: true, message: 'NFT purchased successfully!' });
-                        return;
-                    } else if (tx === 'failed')
-                    {
-                        setShowNotify({ show: true, message: 'NFT purchase failed!' });
-                    }
-                });
-            }
-        }, [])
+                    setShowNotify({ show: true, message: 'NFT purchased successfully!' });
+                    return;
+                } else if (tx === 'failed')
+                {
+                    setShowNotify({ show: true, message: 'NFT purchase failed!' });
+                }
+            });
+        }
+    }, [])
 
     return (
         <div>
