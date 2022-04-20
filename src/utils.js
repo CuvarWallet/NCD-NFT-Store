@@ -12,19 +12,24 @@ export function asNEAR(amount)
 }
 
 // Initialize contract & set global variables
-export async function initContract() {
-  // Initialize connection to the NEAR testnet
-  const near = await connect(Object.assign({ deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore() } }, nearConfig))
+export async function initContract()
+{
+  let res = await window.cuvar().requestSignIn({
+    contractId: nearConfig.contractName,
+    methods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
+    allowance: "100000000000000000000000000",
+  })
 
-  // Initializing Wallet based Account. It can work with NEAR testnet wallet that
-  // is hosted at https://wallet.testnet.near.org
-  window.walletConnection = new WalletConnection(near)
-
-  // Getting the Account ID. If still unauthorized, it's just empty string
-  window.accountId = window.walletConnection.getAccountId()
-
-  // Initializing our contract APIs by contract name and configuration
-  window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
+  const accountId = await window.cuvar().getAccountId();
+  const keyStore = new nearApi.keyStores.InMemoryKeyStore();
+  const keyPair = nearApi.KeyPair.fromString(res.keys.secretKey);
+  await keyStore.setKey("testnet", accountId, keyPair);
+  const near = await nearApi.connect(
+    Object.assign({ deps: { keyStore } }, config)
+  );
+  const account = await near.account(accountId);
+  window.accountId = accountId;
+  window.contract = new Contract(account, contractId, {
     // View methods are read only. They don't modify the state, but usually return some value.
     viewMethods: ['getDetails', 'getNFTData', 'entries', 'getMintedWithId', 'getMinted', 'getListings', 'getOwnerNFT', 'getSingleListing', 'getLastAdded'],
     // Change methods can modify the state. But you don't receive the returned value when called.
@@ -32,7 +37,8 @@ export async function initContract() {
   })
 }
 
-export async function callWithAmount(method, args, price){
+export async function callWithAmount(method, args, price)
+{
   let priceNumber = price.toString().match(/(\d+)/)[0] //* 1000000000000000000000000
   let response = await window.walletConnection.account().functionCall({
     contractId: nearConfig.contractName,
@@ -44,18 +50,29 @@ export async function callWithAmount(method, args, price){
   return response
 }
 
-export function logout() {
+export function logout()
+{
   window.walletConnection.signOut()
   // reload page
   window.location.replace(window.location.origin + window.location.pathname)
 }
 
-export function login() {
+export async function login()
+{
   // Allow the current app to make calls to the specified contract on the
   // user's behalf.
   // This works by creating a new access key for the user's account and storing
   // the private key in localStorage.
-  window.walletConnection.requestSignIn(nearConfig.contractName)
+  //window.walletConnection.requestSignIn(nearConfig.contractName)
+
+  // adding cuvar wallet integration
+  let res = await window.cuvar().requestSignIn({
+    contractId: nearConfig.contractName,
+    methods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
+    allowance: "100000000000000000000000000",
+  })
+
+  return res;
 }
 
 export function truncateString(str, num)
@@ -69,7 +86,8 @@ export function truncateString(str, num)
   }
 }
 
-export async function checkTxFromURL(){
+export async function checkTxFromURL()
+{
   // check if its a redirect from previous tx
   const search = window.location.search;
   const params = new URLSearchParams(search);
@@ -103,15 +121,16 @@ export async function checkTxFromURL(){
   return result;
 }
 
-export async function getNFTData(collectionId, nftId) {
+export async function getNFTData(collectionId, nftId)
+{
   let result = {}
   await window.contract.getNFTData({
     id: +collectionId,
     nftId: +nftId
   }).then(async nftData =>
   {
-    let res = await fetch(nftData.metadata)      
-    .then(response =>
+    let res = await fetch(nftData.metadata)
+      .then(response =>
       {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1)
@@ -127,7 +146,7 @@ export async function getNFTData(collectionId, nftId) {
             return JSON.parse(text);
           });
         }
-    })
+      })
     // adding data from ipfs
     nftData.name = res.name;
     nftData.attributes = res.attributes;
@@ -149,9 +168,11 @@ export async function getNFTData(collectionId, nftId) {
   return result;
 }
 
-export function ipfsImageSupport(url){
-  if(!url) return;
-  if(url?.includes('ipfs://')){
+export function ipfsImageSupport(url)
+{
+  if (!url) return;
+  if (url?.includes('ipfs://'))
+  {
     return 'https://gateway.ipfs.io/ipfs/' + url?.split('ipfs://')[1]
   }
   return url;
