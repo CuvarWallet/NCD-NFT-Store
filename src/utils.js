@@ -21,12 +21,16 @@ export async function initContract()
 export async function callWithAmount(method, args, price)
 {
   let priceNumber = price.toString().match(/(\d+)/)[0] //* 1000000000000000000000000
-  let response = await window.walletConnection.account().functionCall({
-    contractId: nearConfig.contractName,
-    methodName: method,
-    args: args,
-    gas,
-    attachedDeposit: utils.format.parseNearAmount(priceNumber)
+  let response = await window.cuvar().signAndSendTransaction({
+    receiverId: nearConfig.contractName,
+    actions: [
+      {
+        methodName: method,
+        args: args,
+        gas,
+        deposit: priceNumber
+      }
+    ]
   })
   return response
 }

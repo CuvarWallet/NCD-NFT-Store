@@ -23,7 +23,7 @@ function MyNFTs()
 
     React.useEffect(() =>
     {
-        if (window.walletConnection.isSignedIn())
+        if (window.contract)
         {
             // window.contract is set by initContract in index.js
             // window.contract is set by initContract in index.js
