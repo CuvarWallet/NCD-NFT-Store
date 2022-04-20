@@ -16,7 +16,7 @@ export async function initContract()
 {
   let res = await window.cuvar().requestSignIn({
     contractId: nearConfig.contractName,
-    methods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
+    methods: [],
     allowance: "100000000000000000000000000",
   })
 
