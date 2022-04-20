@@ -68,10 +68,9 @@ export async function login()
     viewMethods: ['getDetails', 'getNFTData', 'entries', 'getMintedWithId', 'getMinted', 'getListings', 'getOwnerNFT', 'getSingleListing', 'getLastAdded'],
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
-  })
+  });
 
-  // save to local storage
-  localStorage.setItem('cuvar', JSON.stringify(res))
+  return res;
 }
 
 export function truncateString(str, num)

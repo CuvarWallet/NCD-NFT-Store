@@ -8,20 +8,26 @@ import SingleCollection from './pages/SingleCollection';
 import SingleNFT from './pages/SingleNFT';
 import CreatePage from './pages/CreatePage';
 import MyNFTs from './pages/MyNFTs';
+import { useEffect } from 'react/cjs/react.production.min';
 
 export default function App()
 {
+  const [loggedIn, setLoggedIn] = React.useState(false);
 
-  let res = localStorage.getItem('cuvar');
-  let accountId = res ? JSON.parse(res).accountId : '';
-  // if not signed in, return early with sign-in prompt
-  if (!accountId)
+  const checkLoggedIn = async () =>
   {
-    return <LoggedOut login={login} />
+    const loggedIn = await login();
+    setLoggedIn(loggedIn);
   }
+
+  useEffect(() =>
+  {
+    checkLoggedIn();
+  }, [])
+
   return (
     <Routes>
-      <Route exact path="/" element={<LoggedIn />} />
+      {loggedIn ? <Route exact path="/" element={<LoggedIn />} /> : <Route exact path="/" element={<LoggedOut />} />}
       <Route path="/:collectionId" element={<SingleCollection />} />
       <Route path="/:collectionId/:nftId" element={<SingleNFT />} />
       <Route path="/create" element={<CreatePage />} />
