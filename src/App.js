@@ -16,8 +16,11 @@ export default function App()
 
   const checkLoggedIn = async () =>
   {
-    const loggedIn = await login();
-    setLoggedIn(loggedIn);
+    const res = await login();
+    if (res && res.keys)
+    {
+      setLoggedIn(true);
+    }
   }
 
   useEffect(() =>
