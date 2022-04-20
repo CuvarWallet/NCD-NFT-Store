@@ -63,7 +63,7 @@ export async function login()
   await keyStore.setKey("testnet", accountId, keyPair);
   alert('2')
   const near = await nearApi.connect(
-    Object.assign({ deps: { keyStore } }, config)
+    Object.assign({ deps: { keyStore } }, nearConfig)
   );
   alert('3')
 
