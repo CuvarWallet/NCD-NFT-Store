@@ -29,7 +29,7 @@ export async function initContract()
   );
   const account = await near.account(accountId);
   window.accountId = accountId;
-  window.contract = new Contract(account, contractId, {
+  window.contract = new Contract(account, nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
     viewMethods: ['getDetails', 'getNFTData', 'entries', 'getMintedWithId', 'getMinted', 'getListings', 'getOwnerNFT', 'getSingleListing', 'getLastAdded'],
     // Change methods can modify the state. But you don't receive the returned value when called.
