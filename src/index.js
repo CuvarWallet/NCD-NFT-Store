@@ -5,13 +5,9 @@ import { initContract } from './utils'
 import './assets/index.css'
 import { BrowserRouter } from 'react-router-dom'
 
-window.nearInitPromise = initContract()
-  .then(() => {
-    ReactDOM.render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>,
-      document.querySelector('#root')
-    )
-  })
-  .catch(console.error)
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.querySelector('#root')
+)

@@ -9,18 +9,20 @@ import SingleNFT from './pages/SingleNFT';
 import CreatePage from './pages/CreatePage';
 import MyNFTs from './pages/MyNFTs';
 
-export default function App() {
+export default function App()
+{
 
   // if not signed in, return early with sign-in prompt
-  if (!window.walletConnection.isSignedIn()) {
+  if (!window.accountId)
+  {
     return <LoggedOut login={login} />
   }
   return (
     <Routes>
-      <Route exact path="/" element={<LoggedIn/>} />
-      <Route path="/:collectionId" element={<SingleCollection/>} />
+      <Route exact path="/" element={<LoggedIn />} />
+      <Route path="/:collectionId" element={<SingleCollection />} />
       <Route path="/:collectionId/:nftId" element={<SingleNFT />} />
-      <Route path="/create" element={<CreatePage/>} />
+      <Route path="/create" element={<CreatePage />} />
       <Route path="/my-nft" element={<MyNFTs />} />
     </Routes>
   )

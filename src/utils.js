@@ -1,6 +1,7 @@
 import { connect, Contract, keyStores, WalletConnection, utils } from 'near-api-js'
 import getConfig from './config'
 import BN from "bn.js";
+import * as nearApi from "near-api-js";
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 const gas = new BN('70000000000000');
@@ -14,27 +15,7 @@ export function asNEAR(amount)
 // Initialize contract & set global variables
 export async function initContract()
 {
-  let res = await window.cuvar().requestSignIn({
-    contractId: nearConfig.contractName,
-    methods: [],
-    allowance: "100000000000000000000000000",
-  })
 
-  const accountId = await window.cuvar().getAccountId();
-  const keyStore = new nearApi.keyStores.InMemoryKeyStore();
-  const keyPair = nearApi.KeyPair.fromString(res.keys.secretKey);
-  await keyStore.setKey("testnet", accountId, keyPair);
-  const near = await nearApi.connect(
-    Object.assign({ deps: { keyStore } }, config)
-  );
-  const account = await near.account(accountId);
-  window.accountId = accountId;
-  window.contract = new Contract(account, nearConfig.contractName, {
-    // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['getDetails', 'getNFTData', 'entries', 'getMintedWithId', 'getMinted', 'getListings', 'getOwnerNFT', 'getSingleListing', 'getLastAdded'],
-    // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
-  })
 }
 
 export async function callWithAmount(method, args, price)
@@ -66,13 +47,32 @@ export async function login()
   //window.walletConnection.requestSignIn(nearConfig.contractName)
 
   // adding cuvar wallet integration
+
   let res = await window.cuvar().requestSignIn({
     contractId: nearConfig.contractName,
-    methods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
+    methods: [],
     allowance: "100000000000000000000000000",
   })
 
-  return res;
+  const accountId = await window.cuvar().getAccountId();
+  const keyStore = new nearApi.keyStores.InMemoryKeyStore();
+  const keyPair = nearApi.KeyPair.fromString(res.keys.secretKey);
+  await keyStore.setKey("testnet", accountId, keyPair);
+  const near = await nearApi.connect(
+    Object.assign({ deps: { keyStore } }, config)
+  );
+  const account = await near.account(accountId);
+  window.accountId = accountId;
+  window.contract = new Contract(account, nearConfig.contractName, {
+    // View methods are read only. They don't modify the state, but usually return some value.
+    viewMethods: ['getDetails', 'getNFTData', 'entries', 'getMintedWithId', 'getMinted', 'getListings', 'getOwnerNFT', 'getSingleListing', 'getLastAdded'],
+    // Change methods can modify the state. But you don't receive the returned value when called.
+    changeMethods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
+  })
+  setTimeout(() =>
+  {
+    window.location.replace(window.location.origin + window.location.pathname)
+  }, 1000)
 }
 
 export function truncateString(str, num)
