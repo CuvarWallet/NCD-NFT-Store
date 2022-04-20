@@ -8,7 +8,6 @@ import SingleCollection from './pages/SingleCollection';
 import SingleNFT from './pages/SingleNFT';
 import CreatePage from './pages/CreatePage';
 import MyNFTs from './pages/MyNFTs';
-import { useEffect } from 'react/cjs/react.production.min';
 
 export default function App()
 {
@@ -23,7 +22,7 @@ export default function App()
     }
   }
 
-  useEffect(() =>
+  React.useEffect(() =>
   {
     checkLoggedIn();
   }, [])
