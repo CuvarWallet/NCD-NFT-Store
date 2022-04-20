@@ -28,9 +28,13 @@ export default function App()
     checkLoggedIn();
   }, [])
 
+  if (!loggedIn)
+  {
+    return <LoggedOut />
+  }
   return (
     <Routes>
-      {loggedIn ? <Route exact path="/" element={<LoggedIn />} /> : <Route exact path="/" element={<LoggedOut />} />}
+      <Route exact path="/" element={<LoggedIn />} />
       <Route path="/:collectionId" element={<SingleCollection />} />
       <Route path="/:collectionId/:nftId" element={<SingleNFT />} />
       <Route path="/create" element={<CreatePage />} />
