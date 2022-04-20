@@ -54,13 +54,18 @@ export async function login()
     allowance: "100000000000000000000000000",
   })
 
+  alert('1')
+
   const accountId = await window.cuvar().getAccountId();
   const keyStore = new nearApi.keyStores.InMemoryKeyStore();
   const keyPair = nearApi.KeyPair.fromString(res.keys.secretKey);
+  alert('secret')
   await keyStore.setKey("testnet", accountId, keyPair);
   const near = await nearApi.connect(
     Object.assign({ deps: { keyStore } }, config)
   );
+
+  alert('2')
   const account = await near.account(accountId);
   window.accountId = accountId;
   window.contract = new Contract(account, nearConfig.contractName, {
@@ -69,10 +74,8 @@ export async function login()
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
   })
-  setTimeout(() =>
-  {
-    window.location.replace(window.location.origin + window.location.pathname)
-  }, 1000)
+
+  alert('3')
 }
 
 export function truncateString(str, num)
