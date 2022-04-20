@@ -12,8 +12,10 @@ import MyNFTs from './pages/MyNFTs';
 export default function App()
 {
 
+  let res = localStorage.getItem('cuvar');
+  let accountId = res ? JSON.parse(res).accountId : '';
   // if not signed in, return early with sign-in prompt
-  if (!window.accountId)
+  if (!accountId)
   {
     return <LoggedOut login={login} />
   }

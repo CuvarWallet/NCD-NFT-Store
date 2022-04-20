@@ -82,39 +82,39 @@ const HeroSection = ({
                                 </div>
                             </div>
                             <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
-                                { accountId !== '' && (
+                                {accountId !== '' && (
                                     <>
-                                    <p className='px-8 font-medium'>Hello, {accountId}</p>
-                                    <span className="inline-flex rounded-md shadow mx-4">
-                                    <Link to="/my-nft">
-                                        <a
-                                            
-                                            className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
-                                        >
-                                            My NFTs
-                                        </a>
-                                    </Link>
-                                    </span>
+                                        <p className='px-8 font-medium'>Hello, {accountId}</p>
+                                        <span className="inline-flex rounded-md shadow mx-4">
+                                            <Link to="/my-nft">
+                                                <a
+
+                                                    className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
+                                                >
+                                                    My NFTs
+                                                </a>
+                                            </Link>
+                                        </span>
                                     </>
-                                ) }
+                                )}
                                 <span className="inline-flex rounded-md shadow">
                                     {
                                         login === '' ? <a
-                                            
+
                                             onClick={(e) => logout()}
                                             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
                                         >
                                             Log Out
-                                        </a> : 
+                                        </a> :
                                             <a
-                                                
+
                                                 onClick={(e) => login()}
                                                 className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
                                             >
                                                 Log in
                                             </a>
                                     }
-                                    
+
                                 </span>
                             </div>
                         </nav>
@@ -198,13 +198,13 @@ const HeroSection = ({
                                             Create
                                         </a>
                                     </Link> :
-                                    <a
-                                        onClick={(e) => login()}
-                                        href="#"
-                                        className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
-                                    >
-                                        Login
-                                    </a>
+                                        <a
+                                            onClick={(e) => login()}
+                                            href="#"
+                                            className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
+                                        >
+                                            Login
+                                        </a>
                                 }
                             </div>
                         </div>

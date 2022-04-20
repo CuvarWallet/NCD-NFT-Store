@@ -54,19 +54,13 @@ export async function login()
     allowance: "100000000000000000000000000",
   })
 
-  alert('1')
-
   const accountId = await window.cuvar().getAccountId();
   const keyStore = new nearApi.keyStores.InMemoryKeyStore();
   const keyPair = nearApi.KeyPair.fromString(res.keys.secretKey);
-  alert(accountId)
   await keyStore.setKey("testnet", accountId, keyPair);
-  alert('2')
   const near = await nearApi.connect(
     Object.assign({ deps: { keyStore } }, nearConfig)
   );
-  alert('3')
-
   const account = await near.account(accountId);
   window.accountId = accountId;
   window.contract = new Contract(account, nearConfig.contractName, {
@@ -76,7 +70,8 @@ export async function login()
     changeMethods: ['createsNFT', 'add', 'addInBatch', 'mintNFT', 'listNFT', 'buyNFT'],
   })
 
-  alert('3')
+  // save to local storage
+  localStorage.setItem('cuvar', JSON.stringify(res))
 }
 
 export function truncateString(str, num)
