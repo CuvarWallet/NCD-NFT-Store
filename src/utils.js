@@ -4,7 +4,7 @@ import BN from "bn.js";
 import * as nearApi from "near-api-js";
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
-const gas = new BN('70000000000000');
+const gas = 70000000000000;
 const ONE_NEAR = 1000000000000000000000000;
 
 export function asNEAR(amount)
