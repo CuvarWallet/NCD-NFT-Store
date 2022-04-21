@@ -27,7 +27,7 @@ export async function callWithAmount(method, args, price)
       {
         methodName: method,
         args: args,
-        gas,
+        gas: gas.toString(),
         deposit: priceNumber
       }
     ]
