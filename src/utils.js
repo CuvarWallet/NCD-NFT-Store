@@ -37,6 +37,7 @@ export async function callWithAmount(method, args, price)
 
 export function logout()
 {
+  window.cuvar().signOut(nearConfig.contractName);
   window.location.replace(window.location.origin + window.location.pathname)
 }
 
