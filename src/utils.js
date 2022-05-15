@@ -31,7 +31,8 @@ export async function callWithAmount(method, args, price)
         deposit: priceNumber
       }
     ]
-  })
+  });
+
   return response
 }
 
