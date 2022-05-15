@@ -2,11 +2,12 @@ import React from 'react'
 import HeroSection from '../components/HeroSection'
 import TrendingCard from '../components/TrendingCard'
 
-function LoggedOut({ login }) {
+function LoggedOut()
+{
 
     return (
         <>
-            <HeroSection login={login} />
+            <HeroSection />
             {/* card row */}
             <div className="max-w-3xl border-gray-800 border rounded px-8 py-4 lg:my-20 md:my-14 my-6 lg:mx-auto md:mx-auto mx-8 text-center">
                 <h2 className="text-3xl font-extrabold tracking-tight text-gray-900">

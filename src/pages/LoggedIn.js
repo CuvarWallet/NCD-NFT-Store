@@ -31,7 +31,7 @@ function LoggedIn()
     return (
         <>
             {/* <Header accountId={accountId} logout={logout} greeting={greeting} /> */}
-            <HeroSection accountId={window.accountId} logout={logout} login={''} />
+            <HeroSection accountId={window.accountId} isLogin={true} />
             {/* heading */}
             <div className="max-w-3xl lg:my-20 md:my-14 my-6 lg:mx-auto md:mx-auto mx-8 text-center">
                 <h2 className="text-4xl font-extrabold tracking-tight text-gray-900">

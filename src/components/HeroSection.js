@@ -3,11 +3,11 @@ import React, { Fragment } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
+import { login, logout } from '../utils'
 
 const HeroSection = ({
     accountId = '',
-    logout = '',
-    login,
+    isLogin = false,
 }) => 
 {
     return (
@@ -99,7 +99,7 @@ const HeroSection = ({
                                 )}
                                 <span className="inline-flex rounded-md shadow">
                                     {
-                                        login === '' ? <a
+                                        isLogin ? <a
 
                                             onClick={(e) => logout()}
                                             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50"
@@ -150,7 +150,7 @@ const HeroSection = ({
                                     </div>
                                 </div>
                                 {
-                                    login === '' ?
+                                    isLogin ?
                                         <a
                                             href="#"
                                             onClick={(e) => logout()}
@@ -190,7 +190,7 @@ const HeroSection = ({
                             </div>
                             <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
                                 {
-                                    login === '' ? <Link to='/create'>
+                                    isLogin ? <Link to='/create'>
                                         <a
                                             href="#"
                                             className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
